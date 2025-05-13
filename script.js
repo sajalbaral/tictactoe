@@ -114,7 +114,11 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
       console.log("Invalid move, try another spot");
       return;
     } else {
-      //checks for winner and logs it
+      const isWinner = checkWinner();
+      if (isWinner !== null) {
+        console.log(`the winner is ${isWinner}!`);
+        return;
+      }
     }
     switchTurns();
     console.log(board.getBoard());
