@@ -5,12 +5,21 @@ function gameBoard() {
 
   //this 2d array shows the state of the board
   //row 0 = top of the board and column 0 = left-most of the board
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < columns; j++) {
-      board[i].push(Cells());
+  const initializeBoard = () => {
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push(Cells());
+      }
     }
-  }
+  };
+
+  initializeBoard();
+
+  const reset = () => {
+    board.length = 0; //clears old references
+    initializeBoard();
+  };
 
   //gets the current state of the board
   const getBoard = () => board;
@@ -24,7 +33,7 @@ function gameBoard() {
     return true;
   };
 
-  return { getBoard, markSpot };
+  return { getBoard, markSpot, reset };
 }
 
 function Cells() {
@@ -48,40 +57,40 @@ function checkWinner(board) {
   //check rows
   for (let row = 0; row < 3; row++) {
     if (
-      board[row][0].getValue() === board[row][1].getValue() &&
-      board[row][0].getValue() === board[row][2].getValue() &&
-      board[row][0].getValue() !== " "
+      currentBoard[row][0].getValue() === currentBoard[row][1].getValue() &&
+      currentBoard[row][0].getValue() === currentBoard[row][2].getValue() &&
+      currentBoard[row][0].getValue() !== " "
     ) {
-      return board[row][0].getValue();
+      return currentBoard[row][0].getValue();
     }
   }
 
   //check columns
   for (let col = 0; col < 3; col++) {
     if (
-      board[0][col].getValue() === board[1][col].getValue() &&
-      board[0][col].getValue() === board[2][col].getValue() &&
-      board[0][col].getValue() !== " "
+      currentBoard[0][col].getValue() === currentBoard[1][col].getValue() &&
+      currentBoard[0][col].getValue() === currentBoard[2][col].getValue() &&
+      currentBoard[0][col].getValue() !== " "
     ) {
-      return board[0][col].getValue();
+      return currentBoard[0][col].getValue();
     }
   }
 
   //check diagonals
   if (
-    board[0][0].getValue() === board[1][1].getValue() &&
-    board[0][0].getValue() === board[2][2].getValue() &&
-    board[0][0].getValue() !== " "
+    currentBoard[0][0].getValue() === currentBoard[1][1].getValue() &&
+    currentBoard[0][0].getValue() === currentBoard[2][2].getValue() &&
+    currentBoard[0][0].getValue() !== " "
   ) {
-    return board[0][0].getValue();
+    return currentBoard[0][0].getValue();
   }
 
   if (
-    board[0][2].getValue() === board[1][1].getValue() &&
-    board[0][2].getValue() === board[2][0].getValue() &&
-    board[0][2].getValue() !== " "
+    currentBoard[0][2].getValue() === currentBoard[1][1].getValue() &&
+    currentBoard[0][2].getValue() === currentBoard[2][0].getValue() &&
+    currentBoard[0][2].getValue() !== " "
   ) {
-    return board[0][2].getValue();
+    return currentBoard[0][2].getValue();
   }
 
   return null;
@@ -114,13 +123,16 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
       console.log("Invalid move, try another spot");
       return;
     } else {
-      const isWinner = checkWinner();
+      const isWinner = checkWinner(board);
       if (isWinner !== null) {
-        console.log(`the winner is ${isWinner}!`);
+        console.log(`the winner is ${isWinner}! Game Over!`);
+        console.log("Resetting the board...");
+        board.reset();
         return;
       }
     }
     switchTurns();
     console.log(board.getBoard());
   };
+  return { playRound, getActivePlayer };
 }
