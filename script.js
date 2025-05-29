@@ -93,6 +93,12 @@ function checkWinner(board) {
     return currentBoard[0][2].getValue();
   }
 
+  const fullBoard = currentBoard.every(
+    (row) => row.every((cell) => cell.getValue() !== " ") //goes through each element and sees if it passes the condition set
+  );
+
+  if (fullBoard) return "tie";
+
   return null;
 }
 
@@ -118,21 +124,32 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
   const getActivePlayer = () => activePlayer;
 
   const playRound = (row, column) => {
+    console.log(`It's ${getActivePlayer().name}'s turn.`);
+
     const wasMarked = board.markSpot(row, column, getActivePlayer().token);
     if (!wasMarked) {
-      console.log("Invalid move, try another spot");
+      console.log("Invalid move! Try again.");
       return;
-    } else {
-      const isWinner = checkWinner(board);
-      if (isWinner !== null) {
-        console.log(`the winner is ${isWinner}! Game Over!`);
-        console.log("Resetting the board...");
-        board.reset();
-        return;
-      }
+    }
+
+    const isWinner = checkWinner(board);
+    const winningPlayer = players.find((p) => p.token === isWinner);
+    if (isWinner === "tie") {
+      console.log("It's a tie! Game Over!");
+      board.reset();
+      return;
+    } else if (isWinner !== null) {
+      console.log(`The winner is ${winningPlayer}! Game Over!`);
+      board.reset();
+      return;
     }
     switchTurns();
     console.log(board.getBoard());
   };
   return { playRound, getActivePlayer };
 }
+
+const game = GameController("Alice", "Bob");
+game.playRound(0, 0);
+game.playRound(1, 1);
+game.playRound(0, 1);
