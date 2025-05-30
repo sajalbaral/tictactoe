@@ -1,8 +1,59 @@
 :root {
+  --white: #ffffff;
+  --x: #99e3de;
 }
 
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  background-color: #00c7ba;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.title {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 3rem;
+}
+
+.grid-container {
+  display: grid;
+  display: grid;
+  grid-template-columns: repeat(3, 150px);
+  grid-template-rows: repeat(3, 150px);
+  width: 100%;
+  padding: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.cells {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 0px;
+  border-bottom: 3px solid var(--white);
+  border-right: 3px solid var(--white);
+  outline: none;
+  font-size: 5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.no-r {
+  border-right: none;
+}
+
+.no-b {
+  border-bottom: none;
+}
+
+.x {
+  color: var(--x);
+}
+
+.o {
+  color: var(--white);
 }
