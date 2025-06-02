@@ -1,3 +1,6 @@
+const cells = document.querySelectorAll(".cells");
+const controller = GameController();
+
 function gameBoard() {
   const rows = 3;
   const columns = 3;
@@ -14,7 +17,7 @@ function gameBoard() {
     }
   };
 
-  initializeBoard();
+  initializeBoard(); //creates the board
 
   const reset = () => {
     board.length = 0; //clears old references
@@ -116,6 +119,7 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
   ];
 
   let activePlayer = players[0];
+  let gameOver = false;
 
   const switchTurns = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -123,33 +127,66 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
 
   const getActivePlayer = () => activePlayer;
 
-  const playRound = (row, column) => {
-    console.log(`It's ${getActivePlayer().name}'s turn.`);
+  const resetGame = () => {
+    board.reset();
+    activePlayer = players[0];
+    resetDisplay();
+    gameOver = false;
+  };
+  const status = document.getElementById("status");
 
+  const playRound = (row, column) => {
+    if (gameOver) return null;
+
+    const currentPlayer = getActivePlayer();
     const wasMarked = board.markSpot(row, column, getActivePlayer().token);
-    if (!wasMarked) {
-      console.log("Invalid move! Try again.");
-      return;
-    }
+    if (!wasMarked) return null;
 
     const isWinner = checkWinner(board);
-    const winningPlayer = players.find((p) => p.token === isWinner);
-    if (isWinner === "tie") {
-      console.log("It's a tie! Game Over!");
-      board.reset();
-      return;
+    //const winningPlayer = players.find((p) => p.token === isWinner);
+    if (isWinner == "tie") {
+      gameOver = true;
+      status.textContent = "It's a tie!";
+      setTimeout(() => {
+        resetGame();
+        status.textContent = `Turn: ${players[0].token}`;
+      }, 2000);
+      return currentPlayer.token;
     } else if (isWinner !== null) {
-      console.log(`The winner is ${winningPlayer}! Game Over!`);
-      board.reset();
-      return;
+      gameOver = true;
+      status.textContent = `${currentPlayer.name} (${currentPlayer.token}) wins!`;
+      setTimeout(() => {
+        resetGame();
+        status.textContent = `Turn: ${players[0].token}`;
+      }, 2000);
+      return currentPlayer.token;
     }
     switchTurns();
-    console.log(board.getBoard());
+    status.textContent = `Turn: ${getActivePlayer().token}`;
+    return currentPlayer.token;
   };
   return { playRound, getActivePlayer };
 }
 
-const game = GameController("Alice", "Bob");
-game.playRound(0, 0);
-game.playRound(1, 1);
-game.playRound(0, 1);
+cells.forEach((cell) => {
+  cell.addEventListener("click", clickHandle);
+});
+
+function clickHandle(e) {
+  const index = e.target.getAttribute("data-index");
+  let row = Math.floor(index / 3);
+  let column = index % 3;
+
+  const placedToken = controller.playRound(row, column);
+  if (!placedToken) return;
+
+  e.target.textContent = placedToken;
+  e.target.classList.add(placedToken);
+}
+
+function resetDisplay() {
+  cells.forEach((cell) => {
+    cell.textContent = "";
+    cell.classList.remove("X", "O");
+  });
+}

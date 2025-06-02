@@ -91,3 +91,9 @@ footer {
   text-align: center;
   padding: 1rem;
 }
+
+#status {
+  font-size: 200px;
+  text-align: center;
+  color: var(--white);
+}
