@@ -9,32 +9,37 @@
   </head>
   <body>
     <h1 class="title">Tic Tac Toe</h1>
-    <div class="grid-container">
-      <div class="cells" data-index="0"></div>
-      <div class="cells" data-index="1"></div>
-      <div class="cells no-r" data-index="2"></div>
-      <div class="cells" data-index="3"></div>
-      <div class="cells" data-index="4"></div>
-      <div class="cells no-r" data-index="5"></div>
-      <div class="cells no-b" data-index="6"></div>
-      <div class="cells no-b" data-index="7"></div>
-      <div class="cells no-r no-b" data-index="8"></div>
+    <div class="board-wrapper">
+      <div id="status"></div>
+      <div class="grid-container">
+        <div class="cells" data-index="0"></div>
+        <div class="cells" data-index="1"></div>
+        <div class="cells no-r" data-index="2"></div>
+        <div class="cells" data-index="3"></div>
+        <div class="cells" data-index="4"></div>
+        <div class="cells no-r" data-index="5"></div>
+        <div class="cells no-b" data-index="6"></div>
+        <div class="cells no-b" data-index="7"></div>
+        <div class="cells no-r no-b" data-index="8"></div>
+      </div>
     </div>
     <div class="score">
       <div class="player">
         player
-        <div class="points">2</div>
+        <div class="points">0</div>
       </div>
       <div class="tie">
         tie
-        <div class="points">2</div>
+        <div class="points">0</div>
       </div>
       <div class="computer">
         computer
-        <div class="points">2</div>
+        <div class="points">0</div>
+      </div>
+      <div>
+        <button id="resetScore">Reset</button>
       </div>
     </div>
-    <div id="status"></div>
     <footer>
       <p>project by sajal baral</p>
     </footer>

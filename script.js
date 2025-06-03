@@ -1,5 +1,6 @@
 const cells = document.querySelectorAll(".cells");
 const controller = GameController();
+const resetScore = document.getElementById("resetScore");
 
 function gameBoard() {
   const rows = 3;
@@ -107,6 +108,16 @@ function checkWinner(board) {
 
 function GameController(playerOne = "Player One", playerTwo = "Player Two") {
   const board = gameBoard();
+  let scores = {
+    X: 0,
+    O: 0,
+    tie: 0,
+  };
+  const scoreDisplay = {
+    X: document.querySelector(".player .points"),
+    O: document.querySelector(".computer .points"),
+    tie: document.querySelector(".tie .points"),
+  };
   const players = [
     {
       name: playerOne,
@@ -143,29 +154,41 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
     if (!wasMarked) return null;
 
     const isWinner = checkWinner(board);
-    //const winningPlayer = players.find((p) => p.token === isWinner);
-    if (isWinner == "tie") {
+
+    const statusDiv = document.getElementById("status");
+
+    if (isWinner === "tie") {
       gameOver = true;
-      status.textContent = "It's a tie!";
+      scores.tie++;
+      scoreDisplay.tie.textContent = scores.tie;
+      statusDiv.textContent = "It's a tie!";
+      statusDiv.style.display = "block";
       setTimeout(() => {
         resetGame();
-        status.textContent = `Turn: ${players[0].token}`;
+        statusDiv.style.display = "none";
+        statusDiv.textContent = `Turn: ${players[0].token}`;
       }, 2000);
       return currentPlayer.token;
-    } else if (isWinner !== null) {
+    }
+
+    if (isWinner !== null) {
       gameOver = true;
-      status.textContent = `${currentPlayer.name} (${currentPlayer.token}) wins!`;
+      scores[isWinner]++;
+      scoreDisplay[isWinner].textContent = scores[isWinner];
+      statusDiv.textContent = `${currentPlayer.name} (${currentPlayer.token}) wins!`;
+      statusDiv.style.display = "block";
       setTimeout(() => {
         resetGame();
-        status.textContent = `Turn: ${players[0].token}`;
+        statusDiv.style.display = "none";
+        statusDiv.textContent = `Turn: ${players[0].token}`;
       }, 2000);
       return currentPlayer.token;
     }
     switchTurns();
-    status.textContent = `Turn: ${getActivePlayer().token}`;
+    statusDiv.textContent = `Turn: ${getActivePlayer().token}`;
     return currentPlayer.token;
   };
-  return { playRound, getActivePlayer };
+  return { playRound, getActivePlayer, scoreDisplay, scores };
 }
 
 cells.forEach((cell) => {
@@ -190,3 +213,13 @@ function resetDisplay() {
     cell.classList.remove("X", "O");
   });
 }
+
+resetScore.addEventListener("click", () => {
+  for (const key in controller.scores) {
+    controller.scores[key] = 0;
+  }
+
+  for (const key in controller.scoreDisplay) {
+    controller.scoreDisplay[key].textContent = 0;
+  }
+});
