@@ -4,8 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="script.js" defer></script>
-    <title>Document</title>
+    <title>Tic Tac Toe</title>
   </head>
-  <body></body>
+  <body>
+    <header>
+      <h1>Tic Tac Toe</h1>
+    </header>
+
+    <main>
+      <section id="message">Player X's turn</section>
+
+      <section id="game-board" class="board">
+        <button class="cell" data-index="0"></button>
+        <button class="cell" data-index="1"></button>
+        <button class="cell" data-index="2"></button>
+        <button class="cell" data-index="3"></button>
+        <button class="cell" data-index="4"></button>
+        <button class="cell" data-index="5"></button>
+        <button class="cell" data-index="6"></button>
+        <button class="cell" data-index="7"></button>
+        <button class="cell" data-index="8"></button>
+      </section>
+
+      <section>
+        <button id="reset-button">Reset Game</button>
+      </section>
+    </main>
+
+    <footer>
+      <p>project by Sajal Baral</p>
+    </footer>
+  </body>
 </html>
