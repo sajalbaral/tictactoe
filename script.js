@@ -36,7 +36,6 @@ function createPlayer(name, marker) {
   return {
     getName: () => name,
     getMarker: () => marker,
-    resetBoard,
   };
 }
 
@@ -45,15 +44,31 @@ function gameController(playerOne = "Player One", playerTwo = "Player Two") {
   const player1 = createPlayer(playerOne, "X");
   const player2 = createPlayer(playerTwo, "O");
   let currentPlayer = player1;
+  let gameOver = false;
 
   const board = gameBoard();
+  const resetGame = () => {
+    board.reset();
+    gameOver = false;
+    currentPlayer = player1;
+  };
 
   //places, updates, and switches players based on the move made
   const playRound = (index) => {
     const marker = currentPlayer.getMarker();
     const result = board.updateBoard(index, marker);
+    const winner = checkWinner(board.getBoard());
+
+    if (gameOver) return "Game over. Please reset.";
 
     if (result === "move accepted") {
+      if (winner !== null) {
+        gameOver = true;
+        return `The winner is ${winner}`;
+      } else if (board.getBoard().every((cell) => cell !== "")) {
+        gameOver = true;
+        return "tie";
+      }
       switchPlayer();
     }
   };
@@ -64,10 +79,33 @@ function gameController(playerOne = "Player One", playerTwo = "Player Two") {
   };
 
   const getCurrPlayer = () => currentPlayer;
+  const getBoard = () => board.getBoard;
 
   return {
     getCurrPlayer,
     playRound,
-    getBoard: board.getBoard,
+    getBoard,
+    resetGame,
   };
+}
+
+function checkWinner(board) {
+  const winCombos = [
+    [0, 1, 2], //row
+    [3, 4, 5], //row
+    [6, 7, 8], //row
+    [0, 3, 6], //col
+    [1, 4, 7], //col
+    [2, 5, 8], //col
+    [0, 4, 8], //diag
+    [2, 4, 6], //diag
+  ];
+
+  //loops through the array to check for any winCombos
+  for (const [a, b, c] of winCombos) {
+    if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
+    }
+  }
+  return null;
 }
