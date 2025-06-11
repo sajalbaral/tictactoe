@@ -2,9 +2,9 @@
 
 - A simple browser-based Tic Tac Toe game built from scratch using JavaScript, HTML, and CSS. This project is part of The Odin Project curriculum and was completed to solidify core JavaScript concepts and DOM manipulation.
 
-- live demo:
+- live demo: https://sajalbaral.github.io/tictactoe/
 
--This project wasn't just about building a game — it was about mastering key concepts. Here's what I gained:
+- This project wasn't just about building a game — it was about mastering key concepts. Here's what I gained:
 
 - JavaScript Concepts:
 
