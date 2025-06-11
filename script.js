@@ -1,3 +1,8 @@
+const domCells = document.querySelectorAll(".cell");
+const playerTurn = document.getElementById("message");
+const resetButton = document.getElementById("reset-button");
+const controller = gameController();
+
 function gameBoard() {
   let board = Array(9).fill("");
 
@@ -57,20 +62,25 @@ function gameController(playerOne = "Player One", playerTwo = "Player Two") {
   const playRound = (index) => {
     const marker = currentPlayer.getMarker();
     const result = board.updateBoard(index, marker);
-    const winner = checkWinner(board.getBoard());
 
     if (gameOver) return "Game over. Please reset.";
 
     if (result === "move accepted") {
+      const winner = checkWinner(board.getBoard());
+
       if (winner !== null) {
         gameOver = true;
-        return `The winner is ${winner}`;
+        return `Player ${winner} wins!`;
       } else if (board.getBoard().every((cell) => cell !== "")) {
         gameOver = true;
-        return "tie";
+        return "It's a tie!";
       }
+
       switchPlayer();
+      return `Player ${currentPlayer.getMarker()}'s turn`;
     }
+
+    return result;
   };
 
   //logic for switching players
@@ -109,3 +119,39 @@ function checkWinner(board) {
   }
   return null;
 }
+
+domCells.forEach((element) => {
+  element.addEventListener("click", () => {
+    const cellIndex = parseInt(element.getAttribute("data-index"));
+
+    const currentMarker = controller.getCurrPlayer().getMarker();
+
+    const result = controller.playRound(cellIndex);
+
+    if (
+      result === "space is already taken" ||
+      result === "invalid move" ||
+      result === "Game over. Please reset."
+    ) {
+      alert(result);
+      return;
+    }
+
+    if (element.innerText === "") {
+      element.innerText = currentMarker;
+    }
+
+    playerTurn.innerText = result;
+  });
+});
+
+resetButton.addEventListener("click", () => {
+  domCells.forEach((cell) => {
+    cell.innerText = "";
+  });
+
+  controller.resetGame();
+  playerTurn.innerText = `Player ${controller
+    .getCurrPlayer()
+    .getMarker()}'s turn`;
+});
